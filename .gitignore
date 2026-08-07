@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+data/raw/
+data/processed/
+data/output/
+
+moulinette
+moulinette-ubuntu
+moulinette-fedora
+*.pdf

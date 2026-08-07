@@ -1,0 +1,52 @@
+[project]
+name = "rag-against-the-machine"
+version = "1.0.0"
+description = "Retrieval-Augmented Generation over the vLLM codebase"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26",
+    "pydantic>=2.9",
+    "fire>=0.6",
+    "tqdm>=4.66",
+    "transformers>=4.51",
+    "torch>=2.4",
+    "accelerate>=0.34",
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "sentence-transformers>=5.7.0",
+]
+
+[dependency-groups]
+dev = [
+    "flake8>=7.1",
+    "mypy>=1.11",
+    "pytest>=8.3",
+    "types-tqdm",
+    "httpx>=0.27",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.mypy]
+python_version = "3.10"
+files = ["src"]
+exclude = ['^data/', '^datasets_public/', '^\.venv/']
+warn_return_any = true
+warn_unused_ignores = true
+ignore_missing_imports = true
+disallow_untyped_defs = true
+check_untyped_defs = true
