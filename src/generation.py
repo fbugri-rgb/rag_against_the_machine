@@ -12,9 +12,20 @@ DEFAULT_MAX_SOURCES = 5
 
 SYSTEM_PROMPT = (
     "You answer questions about the vLLM codebase. Use only the numbered "
-    "excerpts provided by the user. If they do not contain the answer, say so "
-    "plainly instead of guessing. Be concise, technical and specific, and "
-    "never invent file names, flags or APIs that are absent from the excerpts."
+    "excerpts provided by the user. Start with a one-sentence direct answer. "
+    "Then, if the excerpts state a condition, requirement, limitation or "
+    "exception that applies to it (look for words such as only, must, "
+    "requires, not supported, unless, at least), add it in one or two "
+    "sentences, copying names, flags and version numbers exactly. If the "
+    "excerpts do not contain the answer, say so plainly instead of guessing. "
+    "Be concise and technical, and never invent file names, flags or APIs "
+    "that are absent from the excerpts."
+)
+ANSWER_INSTRUCTION = (
+    "Answer using only the excerpts above. Give the direct answer first. If "
+    "the most relevant excerpt contains a sentence with 'only', 'must', "
+    "'requires' or 'not supported' about this topic, restate that limitation "
+    "in your answer."
 )
 
 
@@ -135,10 +146,13 @@ class AnswerGenerator:
             return "No relevant source was retrieved for this question."
         self._load()
         assert self._tokenizer is not None and self._model is not None
+        # The question is stated before and after the excerpts: a small model
+        # reads them with the question in mind and still sees it last.
         prompt = (
+            f"Question: {question}\n\n"
             f"Excerpts from the vLLM repository:\n\n{self._truncate(context)}\n\n"
             f"Question: {question}\n\n"
-            "Answer using only the excerpts above."
+            f"{ANSWER_INSTRUCTION}"
         )
         messages = [
             {"role": "system", "content": SYSTEM_PROMPT},

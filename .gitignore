@@ -13,3 +13,10 @@ moulinette
 moulinette-ubuntu
 moulinette-fedora
 *.pdf
+
+# local only, not part of the submission
+.idea/
+eval/
+datasets_public/
+explanation.md
+venv
